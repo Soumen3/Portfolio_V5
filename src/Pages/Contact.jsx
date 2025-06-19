@@ -5,6 +5,8 @@ import SocialLinks from "../components/SocialLinks";
 import Comentar from "../components/Commentar";
 import Swal from "sweetalert2";
 import AOS from "aos";
+import emailjs from 'emailjs-com';
+import conf from "../conf/conf";
 import "aos/dist/aos.css";
 
 const ContactPage = () => {
@@ -39,26 +41,39 @@ const ContactPage = () => {
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
-      }
+      },
+      timer: 3000,
+      timerProgressBar: true,
     });
 
     try {
-      // Get form data
-      const form = e.target;
-      const formData = new FormData(form);
+      console.log("first")
+      const emailjsServiceID = conf.emailjsServiceId;
+      const emailjsTemplateID = conf.emailjsTemplateId;
+      const emailjsPublicKey = conf.emailjsPublicKey;
 
-      // Submit form
-      await form.submit();
-
-      // Show success message
-      Swal.fire({
-        title: 'Success!',
-        text: 'Your message has been sent successfully!',
-        icon: 'success',
-        confirmButtonColor: '#6366f1',
-        timer: 2000,
-        timerProgressBar: true
-      });
+      
+      await emailjs.sendForm(emailjsServiceID, emailjsTemplateID, e.target, emailjsPublicKey)
+        .then(() => {
+          // Show success message
+          Swal.fire({
+          title: 'Success!',
+          text: 'Your message has been sent successfully!',
+          icon: 'success',
+          confirmButtonColor: '#6366f1',
+          timer: 2000,
+          timerProgressBar: true
+        });
+        })
+        .catch(err => {
+          // Show error message
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to send your message. Please try again later.',
+            icon: 'error',
+            confirmButtonColor: '#6366f1'
+          });
+        });
 
       // Reset form
       setFormData({
@@ -69,7 +84,7 @@ const ContactPage = () => {
     } catch (error) {
       Swal.fire({
         title: 'Error!',
-        text: 'Something went wrong. Please try again later.',
+        text: error.message || 'An unexpected error occurred. Please try again later.',
         icon: 'error',
         confirmButtonColor: '#6366f1'
       });
@@ -131,8 +146,6 @@ const ContactPage = () => {
             </div>
 
             <form 
-              action="https://formsubmit.co/ekizulfarrachman@gmail.com"
-              method="POST"
               onSubmit={handleSubmit}
               className="space-y-6"
             >
