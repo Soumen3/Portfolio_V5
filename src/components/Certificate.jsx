@@ -3,7 +3,7 @@ import { Modal, IconButton, Box, Fade, Backdrop, Zoom, Typography } from "@mui/m
 import CloseIcon from "@mui/icons-material/Close"
 import FullscreenIcon from "@mui/icons-material/Fullscreen"
 
-const Certificate = ({ ImgSertif }) => {
+const Certificate = ({ ImgSertif, Title }) => {
 	const [open, setOpen] = useState(false)
 
 	const handleOpen = () => {
@@ -58,7 +58,7 @@ const Certificate = ({ ImgSertif }) => {
 					<img
 						className="certificate-image"
 						src={ImgSertif}
-						alt="Certificate"
+						alt={Title || "Certificate"}
 						style={{
 							width: "100%",
 							height: "auto",
@@ -118,7 +118,24 @@ const Certificate = ({ ImgSertif }) => {
 					</Box>
 				</Box>
 			</Box>
-
+			{/* Certificate Title */}
+			{Title && (
+				<Typography
+					variant="subtitle1"
+					align="center"
+					sx={{
+						mt: 1,
+						fontWeight: 500,
+						color: "#c7d2fe",
+						textShadow: "0 1px 2px rgba(0,0,0,0.15)",
+						fontSize: "1rem",
+						overflow: "hidden",
+						textOverflow: "ellipsis",
+						whiteSpace: "nowrap",
+					}}>
+					{Title}
+				</Typography>
+			)}
 			{/* Modal */}
 			<Modal
 				open={open}
@@ -179,7 +196,7 @@ const Certificate = ({ ImgSertif }) => {
 					{/* Modal Image */}
 					<img
 						src={ImgSertif}
-						alt="Certificate Full View"
+						alt={Title || "Certificate Full View"}
 						style={{
 							display: "block",
 							maxWidth: "100%",

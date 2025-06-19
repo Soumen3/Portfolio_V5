@@ -24,6 +24,7 @@
     "@splinetool/runtime": "^1.9.37",
     "add": "^2.0.6",
     "aos": "^2.3.4",
+    "appwrite": "^18.1.1",
     "clsx": "^2.1.1",
     "dialog": "^0.3.1",
     "firebase": "^11.0.1",

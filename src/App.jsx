@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./index.css";
 import Home from "./Pages/Home";
 import About from "./Pages/About";
@@ -10,6 +10,7 @@ import ContactPage from "./Pages/Contact";
 import ProjectDetails from "./components/ProjectDetail";
 import WelcomeScreen from "./Pages/WelcomeScreen";
 import { AnimatePresence } from 'framer-motion';
+import { client } from "./appwriteConfig";
 
 const LandingPage = ({ showWelcome, setShowWelcome }) => {
   return (
@@ -67,6 +68,17 @@ const ProjectPageLayout = () => (
 function App() {
   const [showWelcome, setShowWelcome] = useState(true);
 
+  useEffect(() => {
+    // Use the shared Appwrite client from appwriteConfig
+    client.ping()
+      .then(res => {
+        console.log('Appwrite Ping:', res);
+      })
+      .catch(err => {
+        console.error('Appwrite Ping Error:', err);
+      });
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -78,3 +90,5 @@ function App() {
 }
 
 export default App;
+
+// All Firebase logic replaced with Appwrite (see previous steps)

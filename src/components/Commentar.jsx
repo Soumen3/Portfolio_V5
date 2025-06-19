@@ -1,41 +1,50 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
-import { getDocs, addDoc, collection, onSnapshot, query, orderBy, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '../firebase-comment';
+import { databases, storage } from "../appwriteConfig";
+import conf from "../conf/conf";
+import { ID, Query } from "appwrite";
 import { MessageCircle, UserCircle2, Loader2, AlertCircle, Send, ImagePlus, X } from 'lucide-react';
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-const Comment = memo(({ comment, formatDate, index }) => (
-    <div 
-        className="px-4 pt-4 pb-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group hover:shadow-lg hover:-translate-y-0.5"
-        
-    >
-        <div className="flex items-start gap-3 ">
-            {comment.profileImage ? (
-                <img
-                    src={comment.profileImage}
-                    alt={`${comment.userName}'s profile`}
-                    className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500/30"
-                    loading="lazy"
-                />
-            ) : (
-                <div className="p-2 rounded-full bg-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500/30 transition-colors">
-                    <UserCircle2 className="w-5 h-5" />
+const Comment = memo(({ comment, formatDate, index }) => {
+    // Helper to get image URL from Img field (Appwrite file ID)
+    const getImageUrl = (imageId) =>
+        imageId
+            ? storage.getFilePreview(conf.appwriteBucketId, imageId).toString().replace("preview", "view")
+            : null;
+
+    const profileImageUrl = getImageUrl(comment.Img);
+
+    return (
+        <div 
+            className="px-4 pt-4 pb-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group hover:shadow-lg hover:-translate-y-0.5"
+        >
+            <div className="flex items-start gap-3 ">
+                {profileImageUrl ? (
+                    <img
+                        src={profileImageUrl}
+                        alt={`${comment.Name}'s profile`}
+                        className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500/30"
+                        loading="lazy"
+                    />
+                ) : (
+                    <div className="p-2 rounded-full bg-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500/30 transition-colors">
+                        <UserCircle2 className="w-5 h-5" />
+                    </div>
+                )}
+                <div className="flex-grow min-w-0">
+                    <div className="flex items-center justify-between gap-4 mb-2">
+                        <h4 className="font-medium text-white truncate">{comment.Name}</h4>
+                        <span className="text-xs text-gray-400 whitespace-nowrap">
+                            {formatDate(comment.$createdAt)}
+                        </span>
+                    </div>
+                    <p className="text-gray-300 text-sm break-words leading-relaxed relative bottom-2">{comment.message}</p>
                 </div>
-            )}
-            <div className="flex-grow min-w-0">
-                <div className="flex items-center justify-between gap-4 mb-2">
-                    <h4 className="font-medium text-white truncate">{comment.userName}</h4>
-                    <span className="text-xs text-gray-400 whitespace-nowrap">
-                        {formatDate(comment.createdAt)}
-                    </span>
-                </div>
-                <p className="text-gray-300 text-sm break-words leading-relaxed relative bottom-2">{comment.content}</p>
             </div>
         </div>
-    </div>
-));
+    );
+});
 
 const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
     const [newComment, setNewComment] = useState('');
@@ -85,7 +94,7 @@ const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
                 <input
                     type="text"
                     value={userName}
-                    onChange={(e) => setUserName(e.target.value)}z
+                    onChange={(e) => setUserName(e.target.value)}
                     placeholder="Enter your name"
                     className="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                     required
@@ -181,7 +190,7 @@ const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
     );
 });
 
-const Komentar = () => {
+const Comentar = () => {
     const [comments, setComments] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
@@ -195,37 +204,71 @@ const Komentar = () => {
     }, []);
 
     useEffect(() => {
-        const commentsRef = collection(db, 'portfolio-comments');
-        const q = query(commentsRef, orderBy('createdAt', 'desc'));
-        
-        return onSnapshot(q, (querySnapshot) => {
-            const commentsData = querySnapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            }));
-            setComments(commentsData);
-        });
+        // Fetch comments from Appwrite
+        const fetchComments = async () => {
+            try {
+                const response = await databases.listDocuments(
+                    conf.appwriteDatabaseId,
+                    conf.appwriteCommentCollectionId,
+                    [Query.orderDesc("$createdAt")]
+                );
+                setComments(response.documents);
+            } catch (err) {
+                setError("Failed to fetch comments.");
+            }
+        };
+        fetchComments();
+        // Optionally, set up polling or subscription for real-time updates
     }, []);
 
     const uploadImage = useCallback(async (imageFile) => {
         if (!imageFile) return null;
-        const storageRef = ref(storage, `profile-images/${Date.now()}_${imageFile.name}`);
-        await uploadBytes(storageRef, imageFile);
-        return getDownloadURL(storageRef);
+        try {
+            const file = await storage.createFile(
+                conf.appwriteBucketId,
+                ID.unique(),
+                imageFile
+            );
+            // Get the public URL for the uploaded image
+            return storage.getFilePreview(conf.appwriteBucketId, file.$id).toString().replace("preview", "view");
+        } catch (err) {
+            setError("Failed to upload image.");
+            return null;
+        }
     }, []);
 
     const handleCommentSubmit = useCallback(async ({ newComment, userName, imageFile }) => {
         setError('');
         setIsSubmitting(true);
-        
+
         try {
-            const profileImageUrl = await uploadImage(imageFile);
-            await addDoc(collection(db, 'portfolio-comments'), {
-                content: newComment,
-                userName,
-                profileImage: profileImageUrl,
-                createdAt: serverTimestamp(),
-            });
+            let imgFileId = null;
+            if (imageFile) {
+                const file = await storage.createFile(
+                    conf.appwriteBucketId,
+                    ID.unique(),
+                    imageFile
+                );
+                imgFileId = file.$id;
+                
+            }
+            await databases.createDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteCommentCollectionId,
+                ID.unique(),
+                {
+                    Img: imgFileId,
+                    Name: userName,
+                    message: newComment,
+                }
+            );
+            // Refresh comments after posting
+            const response = await databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCommentCollectionId,
+                [Query.orderDesc("$createdAt")]
+            );
+            setComments(response.documents);
         } catch (error) {
             setError('Failed to post comment. Please try again.');
             console.error('Error adding comment: ', error);
@@ -236,7 +279,7 @@ const Komentar = () => {
 
     const formatDate = useCallback((timestamp) => {
         if (!timestamp) return '';
-        const date = timestamp.toDate();
+        const date = new Date(timestamp);
         const now = new Date();
         const diffMinutes = Math.floor((now - date) / (1000 * 60));
         const diffHours = Math.floor(diffMinutes / 60);
@@ -287,7 +330,7 @@ const Komentar = () => {
                 ) : (
                     comments.map((comment, index) => (
                         <Comment 
-                            key={comment.id} 
+                            key={comment.$id} 
                             comment={comment} 
                             formatDate={formatDate}
                             index={index}
@@ -316,4 +359,4 @@ const Komentar = () => {
     );
 };
 
-export default Komentar;
+export default Comentar;
