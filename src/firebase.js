@@ -1,1 +1,0 @@
-// No longer needed. Use src/appwriteConfig.js for Appwrite services.
