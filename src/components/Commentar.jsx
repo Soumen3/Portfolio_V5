@@ -317,11 +317,23 @@ const Comentar = () => {
                 </div>
             )}
             
-            <div >
+            <div>
                 <CommentForm onSubmit={handleCommentSubmit} isSubmitting={isSubmitting} error={error} />
             </div>
 
-            <div className="space-y-4 h-[300px] overflow-y-auto custom-scrollbar" data-aos="fade-up" data-aos-delay="200">
+            <div
+                className="space-y-4"
+                style={{
+                    maxHeight: 328,
+                    overflowY: "auto",
+                    overflowX: "hidden",
+                    paddingTop: 4,
+                    paddingRight: 4,
+                    WebkitOverflowScrolling: "touch"
+                }}
+                data-aos="fade-up"
+                data-aos-delay="200"
+            >
                 {comments.length === 0 ? (
                     <div className="text-center py-8" data-aos="fade-in">
                         <UserCircle2 className="w-12 h-12 text-indigo-400 mx-auto mb-3 opacity-50" />
