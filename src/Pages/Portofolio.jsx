@@ -15,6 +15,8 @@ import "aos/dist/aos.css";
 import Certificate from "../components/Certificate";
 import { Code, Award, Boxes } from "lucide-react";
 import conf from "../conf/conf";
+import useMediaQuery from "@mui/material/useMediaQuery";
+
 // Separate ShowMore/ShowLess button component
 const ToggleButton = ({ onClick, isShowingMore }) => (
   <button
@@ -154,6 +156,7 @@ const techStackCategories = [
 
 export default function FullWidthTabs() {
   const theme = useTheme();
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [value, setValue] = useState(0);
   const [projects, setProjects] = useState([]);
   const [certificates, setCertificates] = useState([]);
@@ -338,6 +341,7 @@ export default function FullWidthTabs() {
           axis={theme.direction === "rtl" ? "x-reverse" : "x"}
           index={value}
           onChangeIndex={setValue}
+          disabled={isMobile} // <-- Disable swipe on mobile, only allow tab click
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
             <div className="container mx-auto flex justify-center items-center overflow-hidden">
@@ -349,7 +353,10 @@ export default function FullWidthTabs() {
                   <div
                     key={project.id || index}
                     className="inline-block"
-                    style={{ minWidth: 380, maxWidth: 380 }}
+                    style={{
+                      minWidth: isMobile ? '85vw' : 380,
+                      maxWidth: isMobile ? '85vw' : 380
+                    }}
                     data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
                     data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
                   >
