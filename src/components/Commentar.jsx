@@ -79,6 +79,7 @@ const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
         
         onSubmit({ newComment, userName, imageFile });
         setNewComment('');
+        setUserName('');
         setImagePreview(null);
         setImageFile(null);
         if (fileInputRef.current) fileInputRef.current.value = '';
