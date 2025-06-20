@@ -99,27 +99,57 @@ function a11yProps(index) {
   };
 }
 
-const techStacks = [
-  { icon: "html.svg", language: "HTML" },
-  { icon: "css.svg", language: "CSS" },
-  { icon: "javascript.svg", language: "JavaScript" },
-  { icon: "tailwind.svg", language: "Tailwind CSS" },
-  { icon: "reactjs.svg", language: "ReactJS" },
-  { icon: "vite.svg", language: "Vite" },
-  { icon: "aws.svg", language: "AWS" },
-  { icon: "c_plus_plus.svg", language: "C++" },
-  { icon: "python.svg", language: "Python" },
-  { icon: "django.svg", language: "Django" },
-  { icon: "docker.svg", language: "Docker" },
-  { icon: "git.svg", language: "Git" },
-  { icon: "github.svg", language: "Github" },
-  { icon: "mongodb.svg", language: "Mongodb" },
-  { icon: "mysql.svg", language: "Mysql" },
-  { icon: "numpy.svg", language: "Numpy" },
-  { icon: "pandas.svg", language: "Pandas" },
-  { icon: "postgresql.svg", language: "PostgreSql" },
-  { icon: "postman.svg", language: "Postman" },
-  { icon: "redis.svg", language: "Redis" },
+// Categorized tech stacks
+const techStackCategories = [
+  {
+    label: "Frontend",
+    stacks: [
+      { icon: "html.svg", language: "HTML" },
+      { icon: "css.svg", language: "CSS" },
+      { icon: "tailwind.svg", language: "Tailwind CSS" },
+      { icon: "reactjs.svg", language: "ReactJS" },
+      { icon: "vite.svg", language: "Vite" },
+    ],
+  },
+  {
+    label: "Backend",
+    stacks: [
+      { icon: "django.svg", language: "Django" },
+      { icon: "mongodb.svg", language: "Mongodb" },
+      { icon: "mysql.svg", language: "Mysql" },
+      { icon: "postgresql.svg", language: "PostgreSql" },
+      { icon: "redis.svg", language: "Redis" },
+    ],
+  },
+  {
+    label: "Programming Languages",
+    stacks: [
+      { icon: "python.svg", language: "Python" },
+      { icon: "c_plus_plus.svg", language: "C++" },
+      { icon: "aws.svg", language: "AWS" },
+      { icon: "javascript.svg", language: "JavaScript" },
+      { icon: "c.svg", language: "C Programming" },
+    ],
+  },
+  {
+    label: "Cloud Computing",
+    stacks: [
+      { icon: "aws.svg", language: "AWS" },
+      { icon: "vercel.svg", language: "Vercel" },
+      { icon: "appwrite.svg", language: "Appwrite" },
+    ]
+  },
+  {
+    label: "DevOps & Tools",
+    stacks: [
+      { icon: "docker.svg", language: "Docker" },
+      { icon: "git.svg", language: "Git" },
+      { icon: "github.svg", language: "Github" },
+      { icon: "postman.svg", language: "Postman" },
+      { icon: "numpy.svg", language: "Numpy" },
+      { icon: "pandas.svg", language: "Pandas" },
+    ],
+  },
 ];
 
 export default function FullWidthTabs() {
@@ -363,22 +393,29 @@ export default function FullWidthTabs() {
           </TabPanel>
 
           <TabPanel value={value} index={2} dir={theme.direction}>
-            <div className="container mx-auto flex justify-center items-center overflow-hidden pb-[5%]">
+            <div className="container mx-auto flex flex-col justify-center items-center overflow-hidden pb-[5%]">
               <div
-                className="overflow-x-auto custom-scrollbar"
-                style={{ WebkitOverflowScrolling: "touch", overflowY: "hidden" }} // prevent vertical scroll
+                className="overflow-x-auto custom-scrollbar w-full"
+                style={{ WebkitOverflowScrolling: "touch", overflowY: "hidden" }}
               >
-                <div
-                  className="grid grid-rows-2 grid-flow-col gap-5 md:gap-8 min-w-max"
-                  style={{ minHeight: 180 }}
-                >
-                  {techStacks.map((stack, index) => (
-                    <div
-                      key={index}
-                      data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
-                      data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
-                    >
-                      <TechStackIcon TechStackIcon={stack.icon} Language={stack.language} />
+                <div className="flex flex-row gap-10 min-w-max">
+                  {techStackCategories.map((category, idx) => (
+                    <div key={category.label} className="flex flex-col items-center min-w-[180px]">
+                      <h4 className="text-lg font-semibold text-slate-200 mb-3">{category.label}</h4>
+                      <div
+                        className="grid grid-rows-2 grid-flow-col gap-5 md:gap-8"
+                        style={{ minHeight: 180 }}
+                      >
+                        {category.stacks.map((stack, index) => (
+                          <div
+                            key={stack.language}
+                            data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
+                            data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
+                          >
+                            <TechStackIcon TechStackIcon={stack.icon} Language={stack.language} />
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
