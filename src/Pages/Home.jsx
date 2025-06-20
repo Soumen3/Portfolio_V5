@@ -74,11 +74,33 @@ const SocialLink = memo(({ icon: Icon, link }) => (
 ));
 
 // Constants
-const TYPING_SPEED = 100;
+const TYPING_SPEED = 50;
 const ERASING_SPEED = 50;
 const PAUSE_DURATION = 2000;
-const WORDS = ["MCA Student", "Tech Enthusiast", "Web Developer", "Python Developer", "DevOps Engineer"];
-const TECH_STACK = ["Python", "C", "C++", "JavaScript", "Django", "AWS"];
+const WORDS = [
+                "Backend Developer",
+                "Python Enthusiast",
+                "Django Specialist",
+                "API Integrator",
+                "Cloud Ready Developer",
+                "Real-Time App Builder",
+                "Open Source Contributor",
+                "REST API Developer",
+                "Database Architect",
+                "Problem Solver",
+                "WebSocket Expert",
+                "Code Crafter",
+                "AWS User",
+                "Full Stack Explorer",
+                "Clean Code Advocate",
+                "Innovative Thinker",
+                "Hackathon Winner",
+                "Team Player",
+                "Tech Learner",
+                "Automation Lover",
+                "DevOps Engineer"
+              ];
+const TECH_STACK = ["Python", "C", "C++", "JavaScript", "Django", "Django REST Framework", "AWS", "Git", "React.js", "MongoDB", "MySQL", "PostgreSQL", "Linux", "Docker",];
 const SOCIAL_LINKS = [
   { icon: Github, link: "https://github.com/Soumen3" },
   { icon: Linkedin, link: "https://www.linkedin.com/in/soumen-samanta-029aaa239/" },

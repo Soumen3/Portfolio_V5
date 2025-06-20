@@ -214,9 +214,9 @@ const AboutPage = () => {
               data-aos="fade-right"
               data-aos-duration="1500"
             >
-              A MCA student with a strong interest in Backend development. 
-              I focus on creating engaging digital experiences and consistently strive to deliver the best solutions in every 
-              project.
+              I’m a backend developer passionate about building scalable and secure web applications using Python and Django. 
+              With hands-on experience in real-time systems, cloud services, and database management, 
+              I aim to create impactful tech solutions that combine innovation, efficiency, and user-centric design.
             </p>
 
             <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-4 lg:px-0 w-full">
