@@ -31,7 +31,7 @@ const socialLinks = [
   {
     name: "Twitter",
     displayName: "X",
-    subText: "@soumen.programmer",
+    subText: "@Soumen9382",
     icon: Twitter,
     url: "https://x.com/Soumen9382",
     color: "#000000",
