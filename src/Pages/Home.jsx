@@ -143,7 +143,7 @@ const Home = () => {
 
   // Lottie configuration
   const lottieOptions = {
-    src: "NLbpVqGegK.lottie",
+    src: "Animation.lottie", // Use the full URL, not just the filename
     loop: true,
     autoplay: true,
     style: { width: "100%", height: "100%" },
