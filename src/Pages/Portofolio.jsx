@@ -128,7 +128,7 @@ const techStackCategories = [
     stacks: [
       { icon: "python.svg", language: "Python" },
       { icon: "c_plus_plus.svg", language: "C++" },
-      { icon: "aws.svg", language: "AWS" },
+      { icon: "sql.svg", language: "SQL" },
       { icon: "javascript.svg", language: "JavaScript" },
       { icon: "c.svg", language: "C Programming" },
     ],
