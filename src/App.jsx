@@ -68,16 +68,16 @@ const ProjectPageLayout = () => (
 function App() {
   const [showWelcome, setShowWelcome] = useState(true);
 
-  useEffect(() => {
-    // Use the shared Appwrite client from appwriteConfig
-    client.ping()
-      .then(res => {
-        console.log('Appwrite Ping:', res);
-      })
-      .catch(err => {
-        console.error('Appwrite Ping Error:', err);
-      });
-  }, []);
+  // useEffect(() => {
+  //   // Use the shared Appwrite client from appwriteConfig
+  //   client.ping()
+  //     .then(res => {
+  //       console.log('Appwrite Ping:', res);
+  //     })
+  //     .catch(err => {
+  //       console.error('Appwrite Ping Error:', err);
+  //     });
+  // }, []);
 
   return (
     <BrowserRouter>
