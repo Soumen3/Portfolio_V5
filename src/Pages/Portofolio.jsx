@@ -106,12 +106,20 @@ const techStacks = [
   { icon: "tailwind.svg", language: "Tailwind CSS" },
   { icon: "reactjs.svg", language: "ReactJS" },
   { icon: "vite.svg", language: "Vite" },
-  { icon: "nodejs.svg", language: "Node JS" },
-  { icon: "bootstrap.svg", language: "Bootstrap" },
-  { icon: "firebase.svg", language: "Firebase" },
-  { icon: "MUI.svg", language: "Material UI" },
-  { icon: "vercel.svg", language: "Vercel" },
-  { icon: "SweetAlert.svg", language: "SweetAlert2" },
+  { icon: "aws.svg", language: "AWS" },
+  { icon: "c_plus_plus.svg", language: "C++" },
+  { icon: "python.svg", language: "Python" },
+  { icon: "django.svg", language: "Django" },
+  { icon: "docker.svg", language: "Docker" },
+  { icon: "git.svg", language: "Git" },
+  { icon: "github.svg", language: "Github" },
+  { icon: "mongodb.svg", language: "Mongodb" },
+  { icon: "mysql.svg", language: "Mysql" },
+  { icon: "numpy.svg", language: "Numpy" },
+  { icon: "pandas.svg", language: "Pandas" },
+  { icon: "postgresql.svg", language: "PostgreSql" },
+  { icon: "postman.svg", language: "Postman" },
+  { icon: "redis.svg", language: "Redis" },
 ];
 
 export default function FullWidthTabs() {
@@ -119,11 +127,6 @@ export default function FullWidthTabs() {
   const [value, setValue] = useState(0);
   const [projects, setProjects] = useState([]);
   const [certificates, setCertificates] = useState([]);
-  const [showAllProjects, setShowAllProjects] = useState(false);
-  const [showAllCertificates, setShowAllCertificates] = useState(false);
-  const isMobile = window.innerWidth < 768;
-  const initialItems = isMobile ? 4 : 6;
-
   useEffect(() => {
     // Initialize AOS once
     AOS.init({
@@ -191,17 +194,6 @@ export default function FullWidthTabs() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  const toggleShowMore = useCallback((type) => {
-    if (type === 'projects') {
-      setShowAllProjects(prev => !prev);
-    } else {
-      setShowAllCertificates(prev => !prev);
-    }
-  }, []);
-
-  const displayedProjects = showAllProjects ? projects : projects.slice(0, initialItems);
-  const displayedCertificates = showAllCertificates ? certificates : certificates.slice(0, initialItems);
 
   return (
     <div className="md:px-[10%] px-[5%] w-full sm:mt-0 mt-[3rem] bg-[#030014] overflow-hidden" id="Portofolio">
@@ -319,75 +311,100 @@ export default function FullWidthTabs() {
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
             <div className="container mx-auto flex justify-center items-center overflow-hidden">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-5">
-                {displayedProjects.map((project, index) => (
+              <div
+                className="flex flex-row gap-5 overflow-x-auto whitespace-nowrap pb-4 custom-scrollbar"
+                style={{ WebkitOverflowScrolling: "touch" }}
+              >
+                {projects.map((project, index) => (
                   <div
                     key={project.id || index}
+                    className="inline-block"
+                    style={{ minWidth: 380, maxWidth: 380 }}
                     data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
                     data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
                   >
                     <CardProject
-                      Img={project.Img} // project.Img is already a URL
+                      Img={project.Img}
                       Title={project.Title}
                       Description={project.Description}
                       Link={project.Link}
                       id={project.id}
+                      imgStyle={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "16px" }}
                     />
                   </div>
                 ))}
               </div>
             </div>
-            {projects.length > initialItems && (
-              <div className="mt-6 w-full flex justify-start">
-                <ToggleButton
-                  onClick={() => toggleShowMore('projects')}
-                  isShowingMore={showAllProjects}
-                />
-              </div>
-            )}
           </TabPanel>
 
           <TabPanel value={value} index={1} dir={theme.direction}>
             <div className="container mx-auto flex justify-center items-center overflow-hidden">
-              <div className="grid grid-cols-1 md:grid-cols-3 md:gap-5 gap-4">
-                {displayedCertificates.map((certificate, index) => (
+              <div
+                className="flex flex-row gap-5 overflow-x-auto whitespace-nowrap pb-4 custom-scrollbar"
+                style={{ WebkitOverflowScrolling: "touch" }}
+              >
+                {certificates.map((certificate, index) => (
                   <div
                     key={index}
+                    className="inline-block"
+                    style={{ minWidth: 340, maxWidth: 340 }}
                     data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
                     data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
                   >
-                    <Certificate ImgSertif={certificate.Img} Title={certificate.Title} />
+                    <Certificate
+                      ImgSertif={certificate.Img}
+                      Title={certificate.Title}
+                      imgStyle={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "16px" }}
+                    />
                   </div>
                 ))}
               </div>
             </div>
-            {certificates.length > initialItems && (
-              <div className="mt-6 w-full flex justify-start">
-                <ToggleButton
-                  onClick={() => toggleShowMore('certificates')}
-                  isShowingMore={showAllCertificates}
-                />
-              </div>
-            )}
           </TabPanel>
 
           <TabPanel value={value} index={2} dir={theme.direction}>
             <div className="container mx-auto flex justify-center items-center overflow-hidden pb-[5%]">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 lg:gap-8 gap-5">
-                {techStacks.map((stack, index) => (
-                  <div
-                    key={index}
-                    data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
-                    data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
-                  >
-                    <TechStackIcon TechStackIcon={stack.icon} Language={stack.language} />
-                  </div>
-                ))}
+              <div
+                className="overflow-x-auto custom-scrollbar"
+                style={{ WebkitOverflowScrolling: "touch", overflowY: "hidden" }} // prevent vertical scroll
+              >
+                <div
+                  className="grid grid-rows-2 grid-flow-col gap-5 md:gap-8 min-w-max"
+                  style={{ minHeight: 180 }}
+                >
+                  {techStacks.map((stack, index) => (
+                    <div
+                      key={index}
+                      data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
+                      data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
+                    >
+                      <TechStackIcon TechStackIcon={stack.icon} Language={stack.language} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </TabPanel>
         </SwipeableViews>
       </Box>
+
+      {/* Add custom scrollbar styles (if not already present) */}
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(99, 102, 241, 0.5);
+          border-radius: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255,255,255,0.05);
+          border-radius: 6px;
+        }
+        .custom-scrollbar {
+          overflow-y: hidden !important;
+        }
+      `}</style>
     </div>
   );
 }

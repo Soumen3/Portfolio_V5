@@ -3,7 +3,7 @@ import { Modal, IconButton, Box, Fade, Backdrop, Zoom, Typography } from "@mui/m
 import CloseIcon from "@mui/icons-material/Close"
 import FullscreenIcon from "@mui/icons-material/Fullscreen"
 
-const Certificate = ({ ImgSertif, Title }) => {
+const Certificate = ({ ImgSertif, Title, imgStyle }) => {
 	const [open, setOpen] = useState(false)
 
 	const handleOpen = () => {
@@ -66,6 +66,7 @@ const Certificate = ({ ImgSertif, Title }) => {
 							objectFit: "cover",
 							filter: "contrast(1.10) brightness(0.9) saturate(1.1)",
 							transition: "filter 0.3s ease",
+							...imgStyle, // <-- merge with default styles
 						}}
 						onClick={handleOpen}
 					/>
@@ -203,6 +204,7 @@ const Certificate = ({ ImgSertif, Title }) => {
 							maxHeight: "90vh",
 							margin: "0 auto",
 							objectFit: "contain",
+							...imgStyle, // <-- merge with default styles
 						}}
 					/>
 				</Box>
