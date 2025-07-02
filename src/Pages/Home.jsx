@@ -179,10 +179,10 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-[#030014] overflow-hidden" id="Home">
       <div className={`relative z-10 transition-all duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`}>
-        <div className="container mx-auto px-[5%] sm:px-6 lg:px-[0%] min-h-screen pt-0">
+        <div className="container mx-auto px-[5%] sm:px-6 lg:px-[0%] min-h-screen pt-20 md:pt-24 lg:pt-20 xl:pt-24">
           <div className="flex flex-col lg:flex-row items-center justify-center h-full md:justify-between gap-0 sm:gap-12 lg:gap-20 lg:h-screen">
             {/* Left Column */}
-            <div className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-left lg:text-left order-1 lg:order-1 mt-0"
+            <div className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-left lg:text-left order-1 lg:order-1 mt-4 sm:mt-6 lg:mt-0"
               data-aos="fade-right"
               data-aos-delay="200">
               <div className="space-y-4 sm:space-y-6 md:space-y-8">
@@ -227,7 +227,7 @@ const Home = () => {
             </div>
 
             {/* Right Column - Optimized Lottie Animation */}
-            <div className="w-full py-[10%] sm:py-0 lg:w-1/2 h-auto lg:h-[600px] xl:h-[750px] relative flex items-center justify-center order-2 lg:order-2 mt-8 lg:mt-0"
+            <div className="w-full py-[10%] sm:py-0 lg:w-1/2 h-auto lg:h-[600px] xl:h-[750px] relative flex items-center justify-center order-2 lg:order-2 mt-4 sm:mt-6 lg:mt-0"
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
               data-aos="fade-left"
