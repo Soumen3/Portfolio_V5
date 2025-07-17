@@ -20,7 +20,7 @@ const StatusBadge = memo(() => (
 ));
 
 const MainTitle = memo(() => (
-  <div className="space-y-2" data-aos="fade-up" data-aos-delay="600">
+  <header className="space-y-2" data-aos="fade-up" data-aos-delay="600">
     <h1 className="text-5xl sm:text-6xl md:text-6xl lg:text-6xl xl:text-7xl font-bold tracking-tight">
       <span className="relative inline-block">
         <span className="absolute -inset-2 bg-gradient-to-r from-[#6366f1] to-[#a855f7] blur-2xl opacity-20"></span>
@@ -36,7 +36,7 @@ const MainTitle = memo(() => (
         </span>
       </span>
     </h1>
-  </div>
+  </header>
 ));
 
 const TechStack = memo(({ tech }) => (
@@ -177,23 +177,23 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#030014] overflow-hidden" id="Home">
+    <main className="min-h-screen bg-[#030014] overflow-hidden" id="Home">
       <div className={`relative z-10 transition-all duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`}>
         <div className="container mx-auto px-[5%] sm:px-6 lg:px-[0%] min-h-screen pt-20 md:pt-24 lg:pt-20 xl:pt-24">
           <div className="flex flex-col lg:flex-row items-center justify-center h-full md:justify-between gap-0 sm:gap-12 lg:gap-20 lg:h-screen">
             {/* Left Column */}
-            <div className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-left lg:text-left order-1 lg:order-1 mt-4 sm:mt-6 lg:mt-0"
+            <section className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-left lg:text-left order-1 lg:order-1 mt-4 sm:mt-6 lg:mt-0"
               data-aos="fade-right"
               data-aos-delay="200">
-              <div className="space-y-4 sm:space-y-6 md:space-y-8">
+              <article className="space-y-4 sm:space-y-6 md:space-y-8">
                 <StatusBadge />
                 <MainTitle />
 
                 {/* Typing Effect */}
                 <div className="h-8 flex items-center" data-aos="fade-up" data-aos-delay="800">
-                  <span className="text-xl md:text-2xl bg-gradient-to-r from-gray-100 to-gray-300 bg-clip-text text-transparent font-light">
+                  <h2 className="text-xl md:text-2xl bg-gradient-to-r from-gray-100 to-gray-300 bg-clip-text text-transparent font-light">
                     {text}
-                  </span>
+                  </h2>
                   <span className="w-[3px] h-6 bg-gradient-to-t from-[#6366f1] to-[#a855f7] ml-1 animate-blink"></span>
                 </div>
 
@@ -205,33 +205,34 @@ const Home = () => {
                 </p>
 
                 {/* Tech Stack */}
-                <div className="flex flex-wrap gap-3 justify-start" data-aos="fade-up" data-aos-delay="1200">
+                <section className="flex flex-wrap gap-3 justify-start" data-aos="fade-up" data-aos-delay="1200" aria-label="Technical Skills">
                   {TECH_STACK.map((tech, index) => (
                     <TechStack key={index} tech={tech} />
                   ))}
-                </div>
+                </section>
 
                 {/* CTA Buttons */}
-                <div className="flex flex-row gap-3 w-full justify-start" data-aos="fade-up" data-aos-delay="1400">
+                <nav className="flex flex-row gap-3 w-full justify-start" data-aos="fade-up" data-aos-delay="1400" aria-label="Main Navigation">
                   <CTAButton href="#Portofolio" text="Projects" icon={ExternalLink} />
                   <CTAButton href="#Contact" text="Contact" icon={Mail} />
-                </div>
+                </nav>
 
                 {/* Social Links */}
-                <div className="hidden sm:flex gap-4 justify-start" data-aos="fade-up" data-aos-delay="1600">
+                <nav className="hidden sm:flex gap-4 justify-start" data-aos="fade-up" data-aos-delay="1600" aria-label="Social Media Links">
                   {SOCIAL_LINKS.map((social, index) => (
                     <SocialLink key={index} {...social} />
                   ))}
-                </div>
-              </div>
-            </div>
+                </nav>
+              </article>
+            </section>
 
             {/* Right Column - Optimized Lottie Animation */}
-            <div className="w-full py-[10%] sm:py-0 lg:w-1/2 h-auto lg:h-[600px] xl:h-[750px] relative flex items-center justify-center order-2 lg:order-2 mt-4 sm:mt-6 lg:mt-0"
+            <aside className="w-full py-[10%] sm:py-0 lg:w-1/2 h-auto lg:h-[600px] xl:h-[750px] relative flex items-center justify-center order-2 lg:order-2 mt-4 sm:mt-6 lg:mt-0"
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
               data-aos="fade-left"
-              data-aos-delay="600">
+              data-aos-delay="600"
+              aria-label="Interactive animation">
               <div className="relative w-full opacity-90">
                 <div className={`absolute inset-0 bg-gradient-to-r from-[#6366f1]/10 to-[#a855f7]/10 rounded-3xl blur-3xl transition-all duration-700 ease-in-out ${
                   isHovering ? "opacity-50 scale-105" : "opacity-20 scale-100"
@@ -253,11 +254,11 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </aside>
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

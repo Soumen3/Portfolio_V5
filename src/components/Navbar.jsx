@@ -74,6 +74,8 @@ const Navbar = () => {
                 ? "bg-[#030014]/50 backdrop-blur-xl"
                 : "bg-transparent"
         }`}
+        role="navigation"
+        aria-label="Main navigation"
     >
         <div className="mx-auto px-4 sm:px-6 lg:px-[10%]">
             <div className="flex items-center justify-between h-16">
@@ -126,6 +128,9 @@ const Navbar = () => {
                         className={`relative p-2 text-[#e2d3fd] hover:text-white transition-transform duration-300 ease-in-out transform ${
                             isOpen ? "rotate-90 scale-125" : "rotate-0 scale-100"
                         }`}
+                        aria-expanded={isOpen}
+                        aria-controls="mobile-menu"
+                        aria-label={isOpen ? "Close menu" : "Open menu"}
                     >
                         {isOpen ? (
                             <X className="w-6 h-6" />
@@ -139,12 +144,14 @@ const Navbar = () => {
     
         {/* Mobile Menu Overlay */}
         <div
+            id="mobile-menu"
             className={`md:hidden h-2/5 fixed inset-0 bg-[#030014] transition-all duration-300 ease-in-out ${
                 isOpen
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-[-100%] pointer-events-none"
             }`}
             style={{ top: "64px" }}
+            aria-hidden={!isOpen}
         >
             <div className="flex flex-col h-full">
                 <div className="px-4 py-6 space-y-4 flex-1 ">
