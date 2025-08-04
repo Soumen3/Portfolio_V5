@@ -11,10 +11,11 @@ import ProjectDetails from "./components/ProjectDetail";
 import WelcomeScreen from "./Pages/WelcomeScreen";
 import { AnimatePresence } from 'framer-motion';
 import { client } from "./appwriteConfig";
+import { DataProvider } from "./contexts/DataContext";
 
 const LandingPage = ({ showWelcome, setShowWelcome }) => {
   return (
-    <>
+    <DataProvider>
       <AnimatePresence mode="wait">
         {showWelcome && (
           <WelcomeScreen onLoadingComplete={() => setShowWelcome(false)} />
@@ -43,7 +44,7 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
           </footer>
         </>
       )}
-    </>
+    </DataProvider>
   );
 };
 

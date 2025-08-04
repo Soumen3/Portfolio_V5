@@ -2,6 +2,7 @@ import React, { useEffect, memo, useMemo } from "react"
 import { FileText, Code, Award, Globe, ArrowUpRight, Sparkles, UserCheck } from "lucide-react"
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import { useData } from '../contexts/DataContext'
 
 // Memoized Components
 const Header = memo(() => (
@@ -68,7 +69,7 @@ const ProfileImage = memo(() => (
   </div>
 ));
 
-const StatCard = memo(({ icon: Icon, color, value, label, description, animation }) => (
+const StatCard = memo(({ icon: Icon, color, value, label, description, animation, isLoading }) => (
   <div data-aos={animation} data-aos-duration={1300} className="relative group">
     <div className="relative z-10 bg-gray-900/50 backdrop-blur-lg rounded-2xl p-6 border border-white/10 overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl h-full flex flex-col justify-between">
       <div className={`absolute -z-10 inset-0 bg-gradient-to-br ${color} opacity-10 group-hover:opacity-20 transition-opacity duration-300`}></div>
@@ -83,7 +84,11 @@ const StatCard = memo(({ icon: Icon, color, value, label, description, animation
           data-aos-duration="1500"
           data-aos-anchor-placement="top-bottom"
         >
-          {value}
+          {isLoading ? (
+            <div className="animate-pulse bg-white/20 rounded w-12 h-8"></div>
+          ) : (
+            value
+          )}
         </span>
       </div>
 
@@ -113,21 +118,15 @@ const StatCard = memo(({ icon: Icon, color, value, label, description, animation
 ));
 
 const AboutPage = () => {
+  // Get data from context
+  const { totalProjects, totalCertificates, isLoading, isDataFetched } = useData();
+
   // Memoized calculations
-  const { totalProjects, totalCertificates, YearExperience } = useMemo(() => {
-    const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
-    const storedCertificates = JSON.parse(localStorage.getItem("certificates") || "[]");
-    
+  const YearExperience = useMemo(() => {
     const startDate = new Date("2021-11-06");
     const today = new Date();
-    const experience = today.getFullYear() - startDate.getFullYear() -
+    return today.getFullYear() - startDate.getFullYear() -
       (today < new Date(today.getFullYear(), startDate.getMonth(), startDate.getDate()) ? 1 : 0);
-
-    return {
-      totalProjects: storedProjects.length,
-      totalCertificates: storedCertificates.length,
-      YearExperience: experience
-    };
   }, []);
 
   // Optimized AOS initialization
@@ -163,6 +162,7 @@ const AboutPage = () => {
       label: "Total Projects",
       description: "Innovative web solutions crafted",
       animation: "fade-right",
+      isLoading: isLoading && !isDataFetched,
     },
     {
       icon: Award,
@@ -171,6 +171,7 @@ const AboutPage = () => {
       label: "Certificates",
       description: "Professional skills validated",
       animation: "fade-up",
+      isLoading: isLoading && !isDataFetched,
     },
     {
       icon: Globe,
@@ -179,8 +180,9 @@ const AboutPage = () => {
       label: "Years of Experience",
       description: "Continuous learning journey",
       animation: "fade-left",
+      isLoading: false, // Experience is calculated, not fetched
     },
-  ], [totalProjects, totalCertificates, YearExperience]);
+  ], [totalProjects, totalCertificates, YearExperience, isLoading, isDataFetched]);
 
   return (
     <div

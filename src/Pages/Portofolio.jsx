@@ -16,6 +16,7 @@ import Certificate from "../components/Certificate";
 import { Code, Award, Boxes } from "lucide-react";
 import conf from "../conf/conf";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useData } from '../contexts/DataContext';
 
 // Separate ShowMore/ShowLess button component
 const ToggleButton = ({ onClick, isShowingMore }) => (
@@ -158,71 +159,16 @@ export default function FullWidthTabs() {
   const theme = useTheme();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [value, setValue] = useState(0);
-  const [projects, setProjects] = useState([]);
-  const [certificates, setCertificates] = useState([]);
+  
+  // Get data from context
+  const { projects, certificates, isLoading } = useData();
+  
   useEffect(() => {
     // Initialize AOS once
     AOS.init({
       once: false, // This will make animations occur only once
     });
   }, []);
-
-  const fetchData = useCallback(async () => {
-    try {
-      const {
-        appwriteDatabaseId,
-        appwriteProjectCollectionId,
-        appwriteCertificateCollectionId,
-        appwriteBucketId,
-      } = conf;
-      const databaseId = appwriteDatabaseId;
-      const projectCollectionId = appwriteProjectCollectionId;
-      const certificateCollectionId = appwriteCertificateCollectionId;
-
-      // Fetch projects and certificates
-      const projectResponse = await databases.listDocuments(
-        databaseId,
-        projectCollectionId
-      );
-      const certificateResponse = await databases.listDocuments(
-        databaseId,
-        certificateCollectionId
-      );
-
-      // Helper to get view URL from Appwrite Storage
-      const getImageUrl = (imageId) =>
-        imageId
-          ? storage.getFilePreview(appwriteBucketId, imageId).toString().replace("preview", "view")
-          : "";
-
-      // Map projects with image URLs
-      const projectData = projectResponse.documents.map((doc) => ({
-        id: doc.$id,
-        ...doc,
-        Img: doc.Img ? getImageUrl(doc.Img) : "",
-        TechStack: doc.TechStack || [],
-      }));
-
-      // Map certificates with image URLs
-      const certificateData = certificateResponse.documents.map((doc) => ({
-        ...doc,
-        Img: doc.Img ? getImageUrl(doc.Img) : "",
-      }));
-
-      setProjects(projectData);
-      setCertificates(certificateData);
-
-      // Store in localStorage
-      localStorage.setItem("projects", JSON.stringify(projectData));
-      localStorage.setItem("certificates", JSON.stringify(certificateData));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -344,59 +290,71 @@ export default function FullWidthTabs() {
           disabled={isMobile} // <-- Disable swipe on mobile, only allow tab click
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
-            <div className="container mx-auto flex justify-center items-center overflow-hidden">
-              <div
-                className="flex flex-row gap-5 overflow-x-auto whitespace-nowrap pb-4 custom-scrollbar"
-                style={{ WebkitOverflowScrolling: "touch" }}
-              >
-                {projects.map((project, index) => (
-                  <div
-                    key={project.id || index}
-                    className="inline-block"
-                    style={{
-                      minWidth: isMobile ? '85vw' : 380,
-                      maxWidth: isMobile ? '85vw' : 380
-                    }}
-                    data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
-                    data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
-                  >
-                    <CardProject
-                      Img={project.Img}
-                      Title={project.Title}
-                      Description={project.Description}
-                      Link={project.Link}
-                      id={project.id}
-                      imgStyle={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "16px" }}
-                    />
-                  </div>
-                ))}
+            {isLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500"></div>
               </div>
-            </div>
+            ) : (
+              <div className="container mx-auto flex justify-center items-center overflow-hidden">
+                <div
+                  className="flex flex-row gap-5 overflow-x-auto whitespace-nowrap pb-4 custom-scrollbar"
+                  style={{ WebkitOverflowScrolling: "touch" }}
+                >
+                  {projects.map((project, index) => (
+                    <div
+                      key={project.id || index}
+                      className="inline-block"
+                      style={{
+                        minWidth: isMobile ? '85vw' : 380,
+                        maxWidth: isMobile ? '85vw' : 380
+                      }}
+                      data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
+                      data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
+                    >
+                      <CardProject
+                        Img={project.Img}
+                        Title={project.Title}
+                        Description={project.Description}
+                        Link={project.Link}
+                        id={project.id}
+                        imgStyle={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "16px" }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </TabPanel>
 
           <TabPanel value={value} index={1} dir={theme.direction}>
-            <div className="container mx-auto flex justify-center items-center overflow-hidden">
-              <div
-                className="flex flex-row gap-5 overflow-x-auto whitespace-nowrap pb-4 custom-scrollbar"
-                style={{ WebkitOverflowScrolling: "touch" }}
-              >
-                {certificates.map((certificate, index) => (
-                  <div
-                    key={index}
-                    className="inline-block"
-                    style={{ minWidth: 340, maxWidth: 340 }}
-                    data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
-                    data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
-                  >
-                    <Certificate
-                      ImgSertif={certificate.Img}
-                      Title={certificate.Title}
-                      imgStyle={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "16px" }}
-                    />
-                  </div>
-                ))}
+            {isLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500"></div>
               </div>
-            </div>
+            ) : (
+              <div className="container mx-auto flex justify-center items-center overflow-hidden">
+                <div
+                  className="flex flex-row gap-5 overflow-x-auto whitespace-nowrap pb-4 custom-scrollbar"
+                  style={{ WebkitOverflowScrolling: "touch" }}
+                >
+                  {certificates.map((certificate, index) => (
+                    <div
+                      key={index}
+                      className="inline-block"
+                      style={{ minWidth: 340, maxWidth: 340 }}
+                      data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
+                      data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
+                    >
+                      <Certificate
+                        ImgSertif={certificate.Img}
+                        Title={certificate.Title}
+                        imgStyle={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "16px" }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </TabPanel>
 
           <TabPanel value={value} index={2} dir={theme.direction}>
