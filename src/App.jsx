@@ -12,10 +12,13 @@ import WelcomeScreen from "./Pages/WelcomeScreen";
 import { AnimatePresence } from 'framer-motion';
 import { client } from "./appwriteConfig";
 import { DataProvider } from "./contexts/DataContext";
+import SmokeyCursor from "./components/lightswind/smokey-cursor";
+
 
 const LandingPage = ({ showWelcome, setShowWelcome }) => {
   return (
     <DataProvider>
+      <SmokeyCursor />
       <AnimatePresence mode="wait">
         {showWelcome && (
           <WelcomeScreen onLoadingComplete={() => setShowWelcome(false)} />
