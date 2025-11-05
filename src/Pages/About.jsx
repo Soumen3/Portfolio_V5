@@ -1,4 +1,4 @@
-import React, { useEffect, memo, useMemo } from "react"
+import React, { useEffect, memo, useMemo, useState } from "react"
 import { FileText, Code, Award, Globe, ArrowUpRight, Sparkles, UserCheck } from "lucide-react"
 import AOS from 'aos'
 import 'aos/dist/aos.css'
@@ -69,8 +69,8 @@ const ProfileImage = memo(() => (
   </div>
 ));
 
-const StatCard = memo(({ icon: Icon, color, value, label, description, animation, isLoading }) => (
-  <div data-aos={animation} data-aos-duration={1300} className="relative group">
+const StatCard = memo(({ icon: Icon, color, value, label, description, animation, isLoading, link, external }) => {
+  const CardContent = () => (
     <div className="relative z-10 bg-gray-900/50 backdrop-blur-lg rounded-2xl p-6 border border-white/10 overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl h-full flex flex-col justify-between">
       <div className={`absolute -z-10 inset-0 bg-gradient-to-br ${color} opacity-10 group-hover:opacity-20 transition-opacity duration-300`}></div>
       
@@ -114,19 +114,59 @@ const StatCard = memo(({ icon: Icon, color, value, label, description, animation
         </div>
       </div>
     </div>
-  </div>
-));
+  );
+
+  if (link) {
+    return (
+      <div data-aos={animation} data-aos-duration={1300} className="relative group">
+        <a 
+          href={link} 
+          {...(external && { target: "_blank", rel: "noopener noreferrer" })}
+          className="block w-full h-full"
+        >
+          <CardContent />
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <div data-aos={animation} data-aos-duration={1300} className="relative group">
+      <CardContent />
+    </div>
+  );
+});
 
 const AboutPage = () => {
   // Get data from context
   const { totalProjects, totalCertificates, isLoading, isDataFetched } = useData();
+  
+  // State for GitHub repos
+  const [githubRepos, setGithubRepos] = useState(25); // Default fallback value
+  const [isGithubLoading, setIsGithubLoading] = useState(true);
 
-  // Memoized calculations
-  const YearExperience = useMemo(() => {
-    const startDate = new Date("2021-11-06");
-    const today = new Date();
-    return today.getFullYear() - startDate.getFullYear() -
-      (today < new Date(today.getFullYear(), startDate.getMonth(), startDate.getDate()) ? 1 : 0);
+  // Fetch GitHub repository count
+  useEffect(() => {
+    const fetchGithubRepos = async () => {
+      try {
+        setIsGithubLoading(true);
+        const response = await fetch('https://api.github.com/users/Soumen3');
+        if (response.ok) {
+          const data = await response.json();
+          setGithubRepos(data.public_repos);
+        } else {
+          console.warn('GitHub API request failed, using fallback value');
+          setGithubRepos(25); // Fallback value
+        }
+      } catch (error) {
+        console.error('Error fetching GitHub repos:', error);
+        setGithubRepos(25); // Fallback value
+      } finally {
+        setIsGithubLoading(false);
+      }
+    };
+
+    fetchGithubRepos();
   }, []);
 
   // Optimized AOS initialization
@@ -163,6 +203,7 @@ const AboutPage = () => {
       description: "Innovative web solutions crafted",
       animation: "fade-right",
       isLoading: isLoading && !isDataFetched,
+      link: "#Portofolio", // Link to portfolio section
     },
     {
       icon: Award,
@@ -172,17 +213,20 @@ const AboutPage = () => {
       description: "Professional skills validated",
       animation: "fade-up",
       isLoading: isLoading && !isDataFetched,
+      link: "#Portofolio", // Link to portfolio section
     },
     {
       icon: Globe,
       color: "from-[#6366f1] to-[#a855f7]",
-      value: YearExperience,
-      label: "Years of Experience",
-      description: "Continuous learning journey",
+      value: githubRepos,
+      label: "GitHub Public Repositories",
+      description: "Open source contributions",
       animation: "fade-left",
-      isLoading: false, // Experience is calculated, not fetched
+      isLoading: isGithubLoading, // Show loading while fetching GitHub data
+      link: "https://github.com/Soumen3", // Link to GitHub profile
+      external: true, // Open in new tab
     },
-  ], [totalProjects, totalCertificates, YearExperience, isLoading, isDataFetched]);
+  ], [totalProjects, totalCertificates, githubRepos, isLoading, isDataFetched, isGithubLoading]);
 
   return (
     <div
