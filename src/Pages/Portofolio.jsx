@@ -300,7 +300,7 @@ export default function FullWidthTabs() {
                   className="flex flex-row gap-5 overflow-x-auto whitespace-nowrap pb-4 custom-scrollbar"
                   style={{ WebkitOverflowScrolling: "touch" }}
                 >
-                  {projects.map((project, index) => (
+                  {[...projects].reverse().map((project, index) => (
                     <div
                       key={project.id || index}
                       className="inline-block"
