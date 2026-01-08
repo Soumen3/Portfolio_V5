@@ -112,12 +112,21 @@ const techStackCategories = [
       { icon: "tailwind.svg", language: "Tailwind CSS" },
       { icon: "reactjs.svg", language: "ReactJS" },
       { icon: "vite.svg", language: "Vite" },
+      { icon: "next-js.svg", language: "Next.js" },
     ],
   },
   {
     label: "Backend",
     stacks: [
       { icon: "django.svg", language: "Django" },
+      { icon: "node-js.svg", language: "NodeJS" },
+      { icon: "express.svg", language: "ExpressJS" },
+      { icon: "fastapi.svg", language: "FastAPI" },
+    ],
+  },
+  {
+    label: "Database",
+    stacks: [
       { icon: "mongodb.svg", language: "Mongodb" },
       { icon: "mysql.svg", language: "Mysql" },
       { icon: "postgresql.svg", language: "PostgreSql" },
@@ -149,6 +158,7 @@ const techStackCategories = [
       { icon: "git.svg", language: "Git" },
       { icon: "github.svg", language: "Github" },
       { icon: "postman.svg", language: "Postman" },
+      { icon: "rabbitmq.svg", language: "RabbitMQ" },
       { icon: "numpy.svg", language: "Numpy" },
       { icon: "pandas.svg", language: "Pandas" },
     ],
